@@ -10,7 +10,14 @@ func main() {
 	// doSomething()
 	// printMessage("I'm printing a message bro!")
 	// fmt.Println(totalIPv4Addresses(24))
-	createVLAN(45)
+	var VLANID uint = 5000
+	err := createVLAN(VLANID)
+
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Printf("Creating VLAN with ID of %d\n", VLANID)
+	}
 }
 
 func doSomething() {
@@ -34,7 +41,7 @@ func createVLAN(id uint) error {
 		return errors.New("VLAN ID must be <= 4096")
 	}
 
-	fmt.Printf("Creating VLAN with ID of %d\n", id)
+	// fmt.Printf("Creating VLAN with ID of %d\n", id)
 	return nil
 
 }
