@@ -13,19 +13,30 @@ func main() {
 		return
 	}
 
-	Switch01 := device{
-		hostname: "switch01",
+	Switch01 := Switch{
+		hostname: "Switch01",
 		vlans:    []vlan{myVLAN},
+	}
+
+	Router01 := Router{
+		hostname: "Router01",
+		vrfs:     []string{"wireless", "dmz"},
 	}
 
 	// Set values after instantiation
 	// myVLAN.name = "VLAN_200"
 	// myVLAN.id = 200
 
-	fmt.Println(myVLAN)
-	fmt.Println(Switch01)
+	// fmt.Println(myVLAN)
+	// fmt.Println(Switch01)
 
-	Switch01.printHostname()
+	// Switch01.printHostname()
+	// Switch01.setHostname("switch100")
+	// Switch01.printHostname()
+
+	printHostname(Router01)
+
+	printHostname(Switch01)
 
 }
 
@@ -36,9 +47,14 @@ type vlan struct {
 	name string
 }
 
-type device struct {
+type Switch struct {
 	hostname string
 	vlans    []vlan
+}
+
+type Router struct {
+	hostname string
+	vrfs     []string
 }
 
 func NewVLAN(id uint, name string) (vlan, error) {
@@ -53,6 +69,30 @@ func NewVLAN(id uint, name string) (vlan, error) {
 	}, nil
 }
 
-func (d device) printHostname() {
-	fmt.Println(d.hostname)
+func (r Router) printHostname() {
+	fmt.Println(r.hostname)
+}
+
+func (d *Router) setHostname(hostname string) {
+	if len(d.hostname) > 10 {
+		hostname = hostname[:10]
+	}
+
+	d.hostname = hostname
+}
+
+type HostNamer interface {
+	GetHostname() string
+}
+
+func (r Router) GetHostname() string {
+	return r.hostname
+}
+
+func (s Switch) GetHostname() string {
+	return s.hostname + " " + "I'm as switch"
+}
+
+func printHostname(device HostNamer) {
+	fmt.Printf("The hostname is %s\n", device.GetHostname())
 }
