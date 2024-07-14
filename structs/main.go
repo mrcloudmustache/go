@@ -38,6 +38,9 @@ func main() {
 
 	printHostname(Switch01)
 
+	ptrRouter01 := &Router01
+	printHostnameTrimmed(ptrRouter01, 3)
+
 }
 
 // Struct definition definition
@@ -95,4 +98,22 @@ func (s Switch) GetHostname() string {
 
 func printHostname(device HostNamer) {
 	fmt.Printf("The hostname is %s\n", device.GetHostname())
+}
+
+type Trimmable interface {
+	TrimHostname(int)
+	GetHostname() string
+}
+
+func (r *Router) TrimHostname(length int) {
+	if len(r.hostname) > length {
+		r.hostname = r.hostname[:length]
+	}
+}
+
+func printHostnameTrimmed(device Trimmable, trimLength int) {
+	device.TrimHostname(trimLength)
+
+	fmt.Printf("The device hostname trimmed to %d characters is %s\n",
+		trimLength, device.GetHostname())
 }
